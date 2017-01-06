@@ -1,0 +1,14 @@
+{
+    "description":  "Ficción interactiva onírica. Oneiric interactive fiction.",
+    "framework":    "ubuntu-sdk-15.04-html",
+    "hooks": {
+        "csa": {
+            "apparmor": "app.json",
+            "desktop":  "app.desktop"
+        }
+    },
+    "maintainer":   "Baltasar <baltasarq@gmail.com>",
+    "name":         "csa.baltasarq",
+    "title":        "Cacahuetes, sal y aceite",
+    "version":      "1.0"
+}

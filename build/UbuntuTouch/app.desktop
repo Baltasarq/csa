@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Visitantes
+Comment=Ficción interactiva onírica
+Exec=webapp-container --app-is="csa.baltasarq" $@ www/index.html
+Terminal=false
+Type=Application
+Categories=Game;AdventureGame
+X-Ubuntu-Touch=true
+Icon=./icon.png
+X-Ubuntu-Splash-Color=#ffffff
