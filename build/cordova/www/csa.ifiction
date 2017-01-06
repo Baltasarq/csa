@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ifindex version="1.0" xmlns="http://babel.ifarchive.org/protocol/iFiction/">
+    <story>
+        <identification>
+            <ifid>018C5AE2-4278-4FE4-8C3F-39725445CE0C</ifid>
+            <format>html</format>
+        </identification>
+        <bibliographic>
+            <title>Cacahuetes, sal y aceite</title>
+            <author>Baltasar</author>
+            <language>ES</language>
+            <headline>Una ficción interactiva onírica.</headline>
+            <genre>surreal</genre>
+            <forgiveness>merciful</forgiveness>
+            <description>Despiertas atontado... en un cubo de acero perfectamente regular.</description>
+        </bibliographic>
+        <contacts>
+            <authoremail>baltasarq@gmail.com</authoremail>
+            <url>http://caad.es/baltasarq/</url>
+        </contacts>
+        <release>
+            <version>4</version>
+            <releasedate>2017/01/06</releasedate>
+        </release>
+        <colophon>
+            <generator>Babble</generator>
+            <originated>2017/01/06</originated>
+        </colophon>
+    </story>
+</ifindex>

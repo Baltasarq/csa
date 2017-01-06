@@ -1,0 +1,10 @@
+*.bak
+*.exe
+*~
+*.log
+*.z5
+*.z8
+*.ulx
+*.gblorb
+build/cordova/platforms
+cpp/bin

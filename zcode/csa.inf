@@ -1,0 +1,697 @@
+!------------------------------------------------------------------------
+!  Créditos.
+!------------------------------------------------------------------------
+
+! Esta aventura es una adaptación fiel/evolución de "Cacahuetes, Sal y Aceite",
+! una aventura conversacional realizada en C++, hecha por este autor.
+! (c) 2000, 2001 Baltasar García Perez-Schofield
+! baltasarq@gmail.com
+! 2016: pulido, actualizado email, incluido "ayuda"
+
+! Licencia MIT
+! Puede distribuirse libremente o modificarse, siempre que
+! se cite al autor original.
+
+! Espero y deseo que el código pueda servir de guía a otras personas
+! que se introducen en Inform.
+
+
+! Constantes ---------------------------------------------------------
+Constant Historia "Cacahuetes, Sal y Aceite";
+Constant Titular  "^Marzo de 2001^";
+
+! Número de serie
+Release  2;
+Serial   "150201";
+
+! Constantes para modificar el comportamiento del parser
+Constant PUNTUACION_MAX 3;
+Constant ADMITIR_COMANDO_SALIDAS;
+Constant HAY_CURIOSIDADES;
+
+Include "EParser";
+
+Object MensajesLibreria
+with
+   antes [;
+      miscelanea:
+          if (ml_n==39)
+           "Cuando intentas fijar la vista en eso la neblina
+            se hace más espesa y eres totalmente incapaz de hacerlo...^";
+          else rfalse;
+   ]
+;
+
+Include "Acciones";
+
+[curiosidades;
+ "Los ingredientes de la mantequilla de cacahuete son:
+  ^- Cacahuetes^- Aceite^- Sal^
+  Espero que hayas disfrutado de este juego.^
+  Puedes enviar comentarios al autor a: baltasarq@@64gmail.com^";
+];
+
+! Definición de localidades ------------------------------------------
+
+!---------------------------------------------------------------------
+!	Localidad de la Celda
+!---------------------------------------------------------------------
+
+Object  laCelda "Celda de acero"
+with
+      anyos 0,
+      nombre 'celda' 'prisión',
+      adjetivo 'acerada' 'infranqueable',
+with descripcion
+       "Las paredes de acero de esta habitación perfectamente regular
+        parecen estar hechas de
+        una sola pieza, pulidas hasta el punto de brillar con una luz que...
+        no sabes de donde viene. El silencio es sobrecogedor, y la sensación
+        de fría, y tensa espera abrumadora.",
+     avanzatiempo [;
+        self.anyos++;
+        if (self.anyos >= 3 && self.anyos < 4)
+           "Te sientes realmente mal. Tus manos tiemblan y...
+            multitud de arrugas las surcan. Te sientes mareado, cansado
+            ... casi no puedes sostenerte...";
+        else if (self.anyos>=4)
+             {
+                self.anyos = 0;
+                "No puedes creerlo. Como en una pesadilla de Poe, tu
+                 cuerpo se descompone ante tus propios ojos...
+                 Tienes ganas de llorar, de gritar, pero no puedes,
+                 porque no sientes dolor, y, entonces, de repente,
+                 de  repente...^^
+                 caes... caes... hacia el abismo infinito...^^
+                 respiras agitadamente, tu corazón se desboca,
+                 abres los ojos como si despertaras
+                 de una pesadilla y entonces te das cuenta de
+                 que todo sigue igual... qué está pasando... ^qué está
+                 pasando...";
+             }
+             else
+               "Mueves las agujas hacia adelante.
+                Notas un cierto temblor, y curiosamente, te
+                sientes como más viejo...";
+     ],
+
+has femenino luz;
+
+Object -> niebla "niebla"
+with
+    nombre 'niebla' 'bruma' 'neblina',
+    adjetivo 'densa' 'impenetrable' 'agobiante' 'abrumadora',
+    determinante "la",
+    descripcion
+        "Esta neblina lo envuelve todo... es agobiante, abrumadora...^",
+    antes [;
+        coger: "Pero... ¿cómo vas a coger la niebla?^";
+    ],
+has oculto femenino;
+
+Object -> laVentana "ventana"
+with
+         nombre_f 'ventana',
+         adjetivo 'pequeña',
+         nombre_m 'ventanuco' 'cristal',
+         inicial
+            "Hay una pequeña ventana en la pared este.",
+         descripcion
+            "Es un pequeño ventanuco, cortado sin remaches ni marcas
+             en la misma pared. Al otro lado, tan sólo oscuridad.
+             Un cristal de 1cm de espesor te separa de... lo que sea
+             lo de fuera.",
+         antes [;
+             atacar: "Lo intentas con todas tus fuerzas... pero es
+                      imposible... estás atrapado...";
+             abrir:  "¿Pero, cómo? No hay pestillos, ni cerrojos...";
+             buscarEn:
+                     "Intentas buscar algo familiar en la oscuridad de
+                      lo de fuera, pero no ves nada... curiosamente, tu
+                      respiración no deja vaho en el cristal...";
+         ],
+has estatico femenino;
+
+Object -> elAviso "aviso"
+    with nombre 'aviso' 'inscripción' 'escritura',
+         descripcion
+            "Reza: ~Piensa en cuatro dimensiones. Aún tienes tiempo...~",
+has oculto estatico;
+
+Object -> lasParedes "paredes"
+    with nombre 'pared' 'paredes' 'muro' 'muros',
+         adjetivo 'aceradas' 'pulidas' 'pulida' 'acerada',
+         descripcion [;
+          if (elAviso has oculto)
+          {
+           give elAviso ~oculto;
+           "Las paredes son de acero pulido, sin remaches. No hay nada
+            que destaque en ellas excepto la ventana... y una inscripción
+            en la pared oeste que no habías visto hasta ahora...";
+          } else
+          {
+           "Excepto la ventana y la inscripción no puedes destacar nada
+            de las pareces. Acero y más acero pulido...";
+          }
+         ],
+        antes [;
+           atacar: "Las paredes son de acero pulido, sin remaches,
+                    ni molduras o marcas de ningún tipo: sería inútil.^";
+        ],
+has estatico oculto;
+
+Object -> elReloj "reloj"
+    with nombre 'reloj',
+         adjetivo 'inútil',
+         inicial "En la pared sur, hay un reloj de cocina.",
+         descripcion
+           "Es un extraño reloj, pues sus agujas no se mueven.
+            No crees que tenga mecanismo.",
+         antes [;
+            empujar: <<empujar lasAgujas>>;
+            girainv: <<girainv lasAgujas>>;
+         ],
+has estatico transparente;
+
+Object -> -> lasAgujas "agujas"
+    with nombre 'agujas' 'manecillas',
+         determinante "las",
+         descripcion
+           "Son dos agujas normales, sólo que no se mueven.",
+         antes [;
+           girar: <<empujar lasAgujas>>;
+           empujar:laCelda.avanzaTiempo();
+                   rtrue;
+           girainv:print "Al girar las agujas a la inversa, todo parece ennublecerse.
+                    Te sientes mareado, y esa neblina que parece cargarlo todo se hace
+                    más y más espesa...^Te despiertas para comprobar
+                    que es mejor no moverse...^";
+                    move niebla to elAbismo;
+                    jugadorA(elAbismo,2);
+                    puntuacion++;
+                    rtrue;
+         ],
+has estatico femenino;
+
+!---------------------------------------------------------------------
+!	Localidad Abismo
+!---------------------------------------------------------------------
+
+Object puente "puente"
+with
+     nombre 'puente',
+     nombre_f 'pasarela',
+     descripcion "Un puente que antes no veías por un efecto óptico
+                  cruza entre ambos salientes.",
+     inicial "Ahora puedes ver un puente entre los dos salientes.",
+     antes [;
+           cruza: <<cruza negroabismo>>;
+     ],
+has estatico;
+
+Object  elAbismo "Al borde del abismo."
+    with irrelevante 'rocas' 'roca',
+         arena 0,
+    with descripcion
+       "A tus pies, se abre el abismo insondable. Te encuentras
+	de pie en un saliente de roca, de espaldas a la pared sur
+	del mismo. Al otro lado, el lado norte, un saliente de roca
+	gemelo al que pisas ahora, da paso a la caverna que se abre
+	al exterior. En medio de los salientes, la nada. La niebla aparece
+     cargando toda la estancia, a base de espesos jirones...",
+    al_n [; if (self.arena==1)
+              "¡No puedes cruzar el abismo!";
+            else <<cruza negroabismo>>;
+         ],
+    al_e "Las escarpadas rocas te cortan el paso.",
+    al_o "Las escarpadas rocas te cortan el paso.",
+    al_s "¡Pero si la pared de roca está a tu espalda!",
+    antes [;
+         examinar: if (uno==obj_abajo) <<examinar saliente>>;
+    ],
+has    luz;
+
+Object -> saliente "saliente de roca"
+with
+     nombre 'saliente',
+     adjetivo 'rocoso',
+     descripcion
+           "El suelo del saliente está lleno de montoncitos de arena.^",
+     inicial
+           "Estás de pie sobre el saliente de roca.",
+has estatico;
+
+Object -> negroabismo "abismo insondable"
+with nombre 'abismo',
+     adjetivo 'negro' 'insondable',
+     descripcion
+           "El abismo es negro e insondable. Muy profundo. Da miedo.",
+    antes [;
+          cruza: if (elAbismo.arena==0)
+                 {
+                     "Intentas cruzar el abismo de un salto pero...
+                      En el último momento te das cuenta de que es inútil intentarlo
+                      así y desistes.";
+                 }
+                 else {
+                     print "Cruzas el abismo por el puente que vislumbras
+                            vagamente...^Cuando creías que todo había terminado,
+                            una gran roca cae desde arriba y te golpea la cabeza,
+                            perdiendo el sentido. La neblina se hace más y
+                            más espesa, pareciendo tragarlo todo.^Despiertas
+                            en una extraña estancia...^";
+                     move niebla to laSalida;
+                     jugadorA(laSalida,2);
+                     puntuacion++;
+                     rtrue;
+                 }
+    ],
+has oculto estatico;
+
+Object -> cartel "cartel podrido"
+with
+	nombre 'cartel' 'aviso',
+     adjetivo 'mohoso' 'roñoso' 'viejo' 'podrido',
+	descripcion
+		"El cartel indica: 'Ten Fe: pero que no sea ciega.'^",
+	inicial
+		"Aquí hay un cartel medio podrido por la humedad.",
+has estatico;
+
+Object -> arenaloca "arena"
+with
+     nombre 'arena' 'granos' 'montoncitos',
+     adjetivo 'gordos' 'gorda' 'arenoso' 'arenosa',
+     articulo "bastante",
+     descripcion
+           "Montoncitos de arena gorda...^",
+     antes [;
+               echaA: if (otro==negroabismo){
+                          elAbismo.arena = 1;
+                          remove arenaloca;
+                          move puente to elAbismo;
+                          "Al caer la arena al abismo, parte queda sobre una
+                           superficie que no habías visto antes debido a un
+                           efecto óptico... ¡es un puente!.^Ahora podrás
+                           cruzar seguro.";
+                      }
+                      else <<dejar arenaloca>>;
+           ],
+has oculto femenino;
+
+!------------------------------------------------------------------------
+! La Estancia (Salida)
+!------------------------------------------------------------------------
+
+Object laSalida "La estancia"
+with
+    irrelevante 'enredadera' 'hiedra' 'enredaderas' 'columna' 'columnas'
+                'concha' 'paredes' 'pared' 'simbolos' 'figuras' 'marcas'
+                'inscripciones',
+    descripcion
+       "Extraño lugar... No hay
+        paredes, ni marcas que delimiten el recinto, pero sientes que
+        conoces perfectamente donde están los límites. Hay algunas
+        columnas distribuidas por la estancia, rodeadas idílicamente por
+        enredaderas.",
+    al_n [; <<cruza laPuerta>>; ],
+    antes [;
+       entrar: <<cruza laPuerta>>;
+       salir:  <<cruza laPuerta>>;
+       beberASecas: <<beber laFuente>>;
+       SalpicarASecas: <<Salpicar laFuente>>;
+    ],
+has luz;
+
+Object -> laPuerta "extraña puerta"
+with
+     nombre 'puerta' 'marco',
+     adjetivo 'extraña' 'rara',
+     determinante "la",
+     inicial
+          "Una gran puerta está situada al norte.",
+     descripcion
+          "Es una rara puerta. En realidad, sólo es un marco, con extrañas
+           inscripciones en forma de figuras geométricas. A través del marco
+           parece poder verse una extraña imagen, que ondula...",
+     antes [;
+        cruza: if (laFuente.bebido==0)
+                  "Al acercarte más al marco, éste va adquiriendo una tonalidad
+                   rojiza, hasta que parece ponerse al rojo vivo. No es una buena idea
+                   cruzar la puerta ahora.";
+               else
+               {
+                  puntuacion++;
+                  corto_final.proyeccion();
+                  banderafin = 2;
+                  jugadorA(salonTuCasa,2);
+                  rtrue;
+               }
+        BuscarEn: "A través de la puerta, ves... ves... ¡eres tú!^
+                   Te ves en posición horizontal, en una extraña estancia
+                   llena de elementos irreconocibles. Al fondo parece haber
+                   un enjambre de moscas, que no se mueven... todo es muy
+                   extraño. De repente, la niebla lo envuelve todo, y la
+                   imagen se desvanece...";
+        Salpicar: "Intentas mojar la puerta con el chorro de agua... pero
+                   el agua desaparece antes de tocarla... y tus manos...
+                   no moja...";
+     ],
+has femenino estatico recipiente abierto;
+
+Object -> -> laImagen "imagen"
+with
+    nombre_f 'imagen' 'escena',
+    adjetivo 'reverberante' 'ondulatoria',
+    determinante "la",
+    antes [;
+        if (accion == ##examinar)
+           if (otro   == laPuerta)
+               <<BuscarEn laPuerta>>;
+           else "Se más concreto. No ves ninguna imagen, excepto la de la puerta...";
+        else "La imagen reverbera, como ondulando dentro del marco...";
+    ],
+has femenino estatico;
+
+Object -> laFuente "fuente barroca"
+with
+   bebido 0,
+   nombre 'fuente' 'chorro' 'agua' 'concha',
+   adjetivo 'cristalina' 'sugerente',
+   determinante "la",
+   inicial
+        "Hay una pequeña fuente en el centro exacto. Un chorro
+         brillante y sugerente brota de ella.",
+   descripcion
+         "Es una linda fuentecilla de la que brota agua cristalina,
+          desde su fina concha",
+   antes [;
+       beber: if (self.bebido==0)
+                   print "Bebes de la fuente y te sientes... más puro ...^";
+              else print "Ahora te sientes más puro todavía.^";
+              self.bebido = 1;
+              rtrue;
+       coger: "Intentas coger el chorro de agua... el agua se escurre
+               entre tus dedos... que extraño... no moja...";
+       salpicar: "Taponas el chorro para que salga con más fuerza, pero
+                  antes de que salpique algún objeto, el agua desaparece...
+                  no moja...";
+   ],
+has femenino estatico;
+
+!------------------------------------------------------------------------
+! Hogar, dulce hogar
+!------------------------------------------------------------------------
+
+Object salonTuCasa "Salón de tu casa"
+with descripcion
+     "Por fín: el cálido, confortable y entrañable salón de tu casa..."
+has luz;
+
+! -----------------------------------------------------------------------
+! Después de las localidades, incluimos la gramática
+! -----------------------------------------------------------------------
+
+[echaASub;
+   "No he entendido demasiado bien qué quieres echar y en dónde...";
+];
+
+[cruzaSub;
+   "No he entendido demasiado bien qué quieres cruzar...";
+];
+
+[girainvSub;
+   "No tienes ganas de intentar mover eso...";
+];
+
+[vomitaSub;
+  if(Mijugador.vomitar==0)
+  {
+   print "No puedes aguantar más las náuseas y vomitas todo lo que llevas.^
+    Intentas relajarte, y contemplas estupefacto como toda esa masa
+    desaparece, sin más...^";
+   Mijugador.vomitar = 1;
+  }
+  else
+   "Eres incapaz de vomitar más, pese a que las nausas continúan...^
+    Te sientes realmente mal...^";
+];
+
+[avanzaTiempoSub;
+   if (localizacion==laCelda)
+   {
+       "Mmmm... quizás, pero, ¿cómo...?";
+   }
+   else "No sé para qué...";
+];
+
+[retrocedeTiempoSub;
+   if (localizacion==laCelda)
+   {
+       "De acuerdo, pero, ¿cómo...?";
+   }
+   else "No sé para qué...";
+];
+
+[salpicarSub;
+   "No puedes hacer eso.";
+];
+
+[beberASecasSub;
+   "No hay nada de donde beber aquí...";
+];
+
+[SalpicarAsecasSub;
+   "No hay con qué salpicar aquí...";
+];
+
+[ayudaSub;
+    print "^Las órdenes siguientes son básicas y pueden encontrarse
+      en casi cualquier aventura conversacional. El jugador
+      puede tratar siempre de hacer otras acciones.^^"
+    ;
+    s_fixed();
+    print "^
+     ayuda                 -   Esta ayuda.^
+     n, s, e, o            -   Moverse en tierra según los puntos cardinales.^
+     ex, examinar x        -   Da una descripción de x.^
+     examinarme, xme       -   Información sobre ti y sobre tu misión.^
+     coge x, deja x        -   x pasa a ser o deja de ser llevado.^
+     i, inventario         -   Da una lista de los objetos llevados.^
+     ^^"
+    ;
+    s_normal();
+    print "Por Baltasar, el Arquero.
+     ^^Mándame tus comentarios a: baltasarq@@64gmail.com^^";
+];
+
+Include "Gramatica";
+
+!Definiciones de la gramática para este juego ---------------------------
+
+Extend 'cruza' first
+      * noun -> cruza;
+
+Extend 'salta' first
+      * noun -> cruza;
+
+Extend 'tira' first
+      * held 'a' noun -> echaA
+      * held 'al' noun -> echaA
+      * held 'en' noun -> echaA;
+
+Extend 'lanza' first
+      * held 'a' noun -> echaA
+      * held 'al' noun -> echaA
+      * held 'en' noun -> echaA;
+
+Extend 'echa' first
+      * held 'a' noun -> echaA
+      * held 'al' noun -> echaA
+      * held 'en' noun -> echaA;
+
+Verb 'atrasa'
+      * noun -> girainv
+;
+
+Verb 'retrasa'
+      * noun -> girainv
+;
+
+Verb 'adelanta'
+      * noun -> empujar
+;
+
+Verb 'salpica'
+      *      -> salpicarAsecas
+      * noun -> salpicar
+;
+
+Extend 'mueve' first
+      * noun 'adelante' -> empujar
+      * noun 'atras' -> girainv
+      * noun 'hacia' 'adelante' -> empujar
+      * noun 'hacia' 'atras' -> girainv
+      * noun 'a' 'la' 'inversa' -> girainv;
+
+Extend 'gira' first
+      * noun 'adelante' -> empujar
+      * noun 'atras' -> girainv
+      * noun 'hacia' 'adelante' -> empujar
+      * noun 'hacia' 'atras' -> girainv
+      * noun 'a' 'la' 'inversa' -> girainv;
+
+Extend 'bebe' first
+      *           -> beberASecas;
+
+Extend 'bebe' last
+      * 'de' noun -> beber;
+
+Verb 'vomita'
+      * -> vomita;
+
+Verb 'potea'
+      * -> vomita;
+
+Verb 'retrocede'
+      * 'en' 'el' 'tiempo' -> retrocedeTiempo;
+
+Verb 'avanza'
+      * 'en' 'el' 'tiempo' -> avanzaTiempo;
+
+Verb 'arana'
+      * noun -> atacar;
+
+Extend 'examina' last
+      * noun 'de' noun -> examinar
+      * noun 'del' noun -> examinar
+      * noun 'en' noun -> examinar
+      * noun 'dentro' 'de' noun -> examinar;
+
+Verb meta 'ayuda' 'pistas'
+    * -> ayuda
+;
+
+!---------------------------------------------------------------------
+!    Corto final
+!---------------------------------------------------------------------
+Include "smw";
+Include "cortos";
+
+Object corto_final
+class CortoMetraje
+with descripcion
+        "^^Al cruzar esta última puerta, sientes que el suelo
+         se desvanece bajo tus pies...^^"
+        "Comienzas a caer,
+         a caer, y notas una sensación de vértigo insoportable
+         en el estómago...^^"
+        "No puedes evitar gritar, gritar cada vez
+         más fuerte, desesperado...^^"
+        "Y entonces abres los ojos. La neblina se desvanece, y tu vista
+         se aclara por fín.^^"
+        [;
+         self.delay = 0;
+         "Delante de tí, por fín enfocas la vista y ves... una mesa.
+          -¿Una mesa?-^^";
+        ]
+        [;
+         clearMainWindow();
+         "^^^^Te despiertas tirado en el sofá, en el salón de tu casa.
+          No puedes creer lo que ha pasado. ¿Todo ha sido un sueño?.^
+          ~Tiene que haberlo sido~ -piensas-. Ahí están las tres películas que
+          habías alquilado, ~La máquina del tiempo~, ~Indiana Jones y la
+          última cruzada~ y el ~Niño de Oro~.^El televisor crepita silenciosamente...";
+        ]
+        "^^Te arde la barriga. Ahí está, el maldito bote de Mantequilla de
+         Cacahuete, encima de la mesa; la causa de tus males de estómago."
+        "^^Deberías dejar de tomarla para cenar. No te va bien."
+        "^^Esto lo explica todo. Ahora está claro.^~Todo ha sido un sueño.~
+         Piensas mientras te sacudes arena (?) de los pies.^^"
+;
+
+!---------------------------------------------------------------------
+!    PNJ's o Los entes diabólicos...
+!---------------------------------------------------------------------
+Class Ente
+with
+   numero_turno 0,
+   mensaje_ente [; return "^~Soy un ente muy malo~. El ente desaparece."; ],
+   daemon [;
+       if ((turnos % self.numero_turno)==0)
+          self.mensaje_ente();
+   ]
+;
+
+Ente Cacahuete
+with numero_turno 11,
+     mensaje_ente [; print "^La entidad Cacahuete aparece:~El sabor de los
+              cacahuetes...~.^La entidad desaparece. Te sientes mareado...^"; ]
+;
+
+Ente Aceite
+with numero_turno 9,
+     mensaje_ente [; print "^La entidad Aceite aparece:~Aceitosos cacahuetes...~
+              ^La entidad desaparece.^Te mareas...^"; ]
+;
+
+Ente Sal
+with numero_turno 7,
+     mensaje_ente [; print "^La entidad Sal aparece:~El amargo sabor de la sal...~.
+              ^La entidad desaparece. Te sientes pesado.^"; ]
+;
+
+Ente Neblina
+with numero_turno 6,
+     mensaje_ente [; print "^La neblina parece hacerse más y más pesada,
+                         te embota los sentidos, te sientes mal...^";
+     ]
+;
+
+
+!---------------------------------------------------------------------
+!	Inicialización
+!---------------------------------------------------------------------
+Object Mijugador
+with
+ ControlaExaminar
+ [;
+  if ((actor ~= jugador)
+    ||(accion~= ##examinar)
+    ||(uno   ~= jugador))
+    rfalse;
+  else
+    print "No eres capaz de mirarte. Por mucho que intentas hacerlo, no
+     consigues enfocar la vista hacia tu propio cuerpo, tan sólo hacia
+     adelante...^De repente, te comienza a pesar la neblina que parece
+     rodearlo todo...^
+     Y finalmente, todo vuelve a la normalidad... normalidad...^";
+    if (Mijugador.vomitar)
+     print "Además acabas de vomitar y aún te sientes realmente mal...^";
+    rtrue;
+  ],
+  vomitar 0
+;
+
+[ Inicializar;
+	print "Los jugadores inexpertos deberían teclear 'AYUDA' en
+	       el prompt: '>'.^Pulsa ENTER cuando veas: '...'";
+	wait();
+	localizacion = laCelda;
+     ArrancarDaemon(Cacahuete);
+     ArrancarDaemon(Aceite);
+     ArrancarDaemon(Sal);
+     ArrancarDaemon(Neblina);
+     jugador.ordenes = Mijugador.controlaExaminar;
+     modo_notificar = 0; ! Que no avise de la suma de puntos
+	"^No sabes que estás haciendo en este extraño lugar.^
+      Te encuentras muy mal, mareado,
+      y una extraña neblina parece envolver todo el ambiente, y
+      te impide ver con claridad.
+      Tienes una extraña y pesada sensación de náusea y de embotamiento.^
+      Una cosa es clara: tienes que salir de aquí.^^
+      Tres entidades luminosas aparecen ante tí; son
+      cacahuete, sal, y aceite:
+      ~Descubre el reto... y pasa las tres pruebas...~
+      Las entidades desaparecen...^^";
+];
