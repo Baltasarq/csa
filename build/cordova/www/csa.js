@@ -3,10 +3,8 @@
  *      Cacahuetes, sal y aceite (v4)
  *          1998, 1999, 2000, 2012: Csa: Parser KAC/C++
  *          2009, 2010, 2016: Csa v2 a Csa v3: informATE!/Zcode
+ *          2017: Aventura de texto onírica construida con fi.js.
  *      (c) 1998-2017 baltasarq@gmail.com MIT License
- *
- *      2017: Aventura de texto onírica construida con fi.js.
- *      Licencia MIT
  *
  *      Este relato tiene una larga historia.
  *      Fue creado inicialmente para una *NanoComp* en 2000.
