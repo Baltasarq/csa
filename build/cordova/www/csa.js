@@ -7,6 +7,14 @@
  *
  *      2017: Aventura de texto onírica construida con fi.js.
  *      Licencia MIT
+ *
+ *      Este relato tiene una larga historia.
+ *      Fue creado inicialmente para una *NanoComp* en 2000.
+ *      El soporte era un parser propio, que posteriormente cambié por
+ *      InformATE!, pero en realidad se trataba más de un relato interactivo
+ *      que de una verdadera aventura conversacional (objetos, puzzles, etc.)
+ *      Así que en 2017 me lié la manta a la cabeza y la porté a mi propio
+ *      sistema HTML5: **fi.js**. El resultado es así más versátil.
  */
 
 ctrl.ponTitulo( "Cacahuetes, sal y aceite" );
@@ -15,21 +23,6 @@ ctrl.ponIntro( "Despiertas atontado... \
 ctrl.ponImg( "res/cube.jpg" );
 ctrl.ponAutor( "Baltasarq" );
 ctrl.ponVersion( "4 20170106" );
-
-function amenities() {
-    return "<p>Este relato fue creado para una <i>NanoComp</i> en 2000.<br> \
-            El soporte era un parser propio, que posteriormente cambié por \
-            InformATE!, pero en realidad se trataba \
-            más de un relato interactivo que de una verdadera aventura \
-            conversacional (objetos, puzzles, etc.)</p><p>Así que en 2017 \
-            me lié la manta a la cabeza y la porté a mi propio sistema, \
-            <b>fi.js</b>. El resultado es así más versátil.</p> \
-            <p>Los ingredientes de la mantequilla de cacahuete son:<br><ul>\
-            <li>Cacahuetes\
-            <li>Aceite\
-            <li>Sal\
-            </ul></p>";
-}
 
 // *** Locs --
 // ---------------------------------------------------------------------- Celda
@@ -177,10 +170,10 @@ objClock.prePull = function() {
 }
 
 objClock.prePush = function() {
-    var toret = "Al girar las agujas a la inversa, todo parece ennublecerse. \
-            Te sientes mareado, y esa neblina que parece cargarlo todo se hace \
-            más y más espesa...<br/>Te despiertas para comprobar que es mejor \
-            no moverse...";
+    var toret = "Tras girar las agujas a la inversa, \
+            todo pareció ennublecerse, desvanecerse en finas hebras \
+            de humo. Y lo que comprobaste al recobrar el sentido fue \
+            que era mejor no moverse...";
     objNiebla.moveTo( locCliff );
     ctrl.goto( locCliff );
     return toret;
@@ -189,7 +182,7 @@ objClock.prePush = function() {
 // --------------------------------------------------------------------- Abismo
 var locCliff = ctrl.places.creaLoc(
     "Abismo",
-    [ "caida", "sima", "agujero"],
+    [ "caida", "sima", "agujero" ],
     "<p class='firstP'>A tus pies, se abre el ${abismo, ex pozo} insondable. \
     Un ${saliente de roca, ex saliente} evita que caigas. Te mantienes en \
     tensión, de espaldas a la pared sur \
@@ -202,7 +195,7 @@ locCliff.pic = "res/cliff.jpg";
 var objBridge = ctrl.creaObj(
     "puente",
     [ "pasarela" ],
-    "Un puente que antes no veías por un efecto óptico cruza \
+    "Un puente que antes no veías por un efecto óptico ${cruza, norte} \
     entre ambos salientes.",
     locCliff,
     Ent.Scenery
@@ -211,14 +204,19 @@ var objBridge = ctrl.creaObj(
 var objRock = ctrl.creaObj(
     "saliente",
     [ "roca" ],
-    "El suelo del saliente está lleno de montoncitos de ${arena, ex arena}. \
-     También puedes ver un ${cartel, ex cartel}.",
+    "Casi no te atreves a mover los pies, en la superficie resbaladiza por \
+     la arena.",
     locCliff,
     Ent.Scenery
 );
 objRock.preExamine = function() {
-    if ( ctrl.places.limbo.has( objSand ) ) {
+    if ( objRock.examinations == 0 ) {
         objSand.moveTo( locCliff );
+        locCliff.desc += "<p>El suelo del saliente está lleno \
+                        de montoncitos de ${arena, ex arena}. \
+                        Hacia una lado, se puede \
+                        ver un ${cartel, ex cartel}.</p>";
+        actions.execute( "look" );
     }
 
     return objRock.desc;
@@ -242,17 +240,38 @@ var objSign = ctrl.creaObj(
 
 var objSand = ctrl.creaObj(
     "arena",
-    [ "montoncitos", "montoncito", "monton", "montones" ],
+    [ "montoncitos", "montoncito", "monton", "montones", "grano", "granos" ],
     "Montoncitos de arena gorda",
     ctrl.places.limbo,
-    Ent.Portable
+    Ent.Scenery
 );
+
+objSand.prePush = function() {
+    var toret = "Al tirar la arena hacia el abismo, \
+                 parte quedó suspendida sobre una \
+                 superficie que no habías percibido antes debido a un \
+                 elaborado efecto óptico que no aciertas a descubrir...";
+
+    locCliff.desc += "<p>Un ${puente, ex puente} ha quedado parcialmente \
+                      descubierto por la arena posada sobre su superficie. \
+                      </p>";
+    actions.execute( "look" );
+
+    return toret;
+}
+
 objSand.preExamine = function() {
     var toret = objSand.desc;
     var player = ctrl.personas.getPlayer();
 
     if ( player.has( this ) ) {
-        toret += ", como la que tienes entre las manos.";
+        toret += ", tanto en el suelo del saliente como en tus manos. \
+                  Observas un efecto muy extraño: al estar asomado al abismo, \
+                  algunos granos de arena han caído hacia adelante... pero su \
+                  caída se ha detenido abruptamente a tus pies... ¡La arena \
+                  parece flotar sobre la oscuridad de la nada! Lo extraño del \
+                  efecto te invita a ${tirar arena, empuja arena} hacia \
+                  adelante.";
     } else {
         toret += ", que podrías ${coger, coge arena} con tus manos."
     }
@@ -260,15 +279,179 @@ objSand.preExamine = function() {
     return toret;
 }
 
+objSand.preTake = function() {
+    this.moveTo( ctrl.personas.getPlayer() );
+    return "Tomas un montoncito de arena en tus manos, mientras los \
+            granos se escurren por entre tus dedos.";
+}
+
+var objBridge = ctrl.creaObj(
+    "puente",
+    [ "pasarela" ],
+    "Un puente que antes no veías por un efecto óptico ${cruza, norte} \
+    entre ambos salientes.",
+    locCliff,
+    Ent.Scenery
+);
+
+// --------------------------------------------------------------------- Salida
+var locFountain = ctrl.places.creaLoc(
+    "Salida",
+    [ "sala", "estancia" ],
+    "<p class='firstP'>Extraño lugar... No hay \
+        paredes, ni marcas que delimiten el recinto, pero sientes que \
+        conoces perfectamente donde están los límites. Hay algunas \
+        columnas distribuidas por la estancia, rodeadas idílicamente por \
+        ${enredaderas, ex enredaderas}. Al fondo de la estancia, puedes \
+        ver una ${puerta, ex puerta}. Y en el medio, \
+        una ${fuente, ex fuente}.</p>" );
+locFountain.pic = "res/fountain.jpg";
+locFountain.setExitBi( "sur", locCliff );
+
+locFountain.preGo = function() {
+    var toret = "";
+
+    if ( !objFountain.drunk ) {
+        toret = "Avanzas por el medio de la sala, decidido hacia la puerta. \
+                 Al acercarte más al marco, éste va adquiriendo una tonalidad \
+                 rojiza, hasta que parece ponerse al rojo vivo. \
+                 No es una buena idea cruzar la puerta ahora.";
+        objDoor.triedToCross = true;
+    } else {
+        toret = goAction.exe( parser.sentence );
+    }
+
+    return toret;
+}
+
+var objVine = ctrl.creaObj(
+    "enredadera",
+    [ "enredaderas", "hiedra", "hiedras", "columnas", "columna" ],
+    "Las enredaderas trepan por entre las columnas, \
+    formando un tupido entramado.",
+    locFountain,
+    Ent.Scenery
+);
+
+var objDoor = ctrl.creaObj(
+    "puerta",
+    [ "marco" ],
+    "Es una rara puerta. En realidad, sólo es un marco, con extrañas \
+    inscripciones en forma de figuras geométricas. A través del marco \
+    parece poder verse una ${extraña imagen, ex imagen}, que ondula... \
+    Pero sientes que podrías ${atravesarla, norte}.",
+    locFountain,
+    Ent.Scenery
+);
+objDoor.triedToCross = false;
+
+var objImage = ctrl.creaObj(
+    "imagen",
+    [ "ondulacion" ],
+    "A través de la puerta, ves... ves... ¡Eres tú! \
+    Te ves en posición horizontal, en una extraña estancia \
+    llena de elementos irreconocibles. Al fondo parece haber \
+    un enjambre de moscas, perturbadoramente estático... todo es muy \
+    extraño. De repente, la niebla lo envuelve todo, y la \
+    imagen se desvanece...",
+    locFountain,
+    Ent.Scenery
+);
+
+var objFountain = ctrl.creaObj(
+    "fuente",
+    [ "barroco", "barroca", "concha" ],
+    "Hay una pequeña fuente en el centro exacto de la sala. \
+     Un chorro brillante y sugerente de agua cristalina brota de ella. \
+     Sientes el extraño impulso de ${cogerla, ex agua} en tu mano...",
+    locFountain,
+    Ent.Scenery
+);
+objFountain.drunk = false;
+
+objFountain.preHave = function() {
+    this.drunk = true;
+    return "El agua no te refresca... pero te sientes como más puro.";
+}
+
+objFountain.preExamine = function() {
+    var toret = objFountain.desc;
+
+    if ( objDoor.triedToCross ) {
+        toret += " Y después del calor desprendido por el marco, sientes la \
+                  necesidad de ${beberla, bebe fuente}.";
+    }
+
+    return toret;
+}
+
+var objWater = ctrl.creaObj(
+    "agua",
+    [ "chorro" ],
+    "Intentas coger el chorro de agua... el agua se escurre por \
+     entre tus dedos... pero... que extraño... no moja...",
+    locFountain,
+    Ent.Scenery
+);
+
+// --------------------------------------------------------------------- Final
+var locLiving = ctrl.places.creaLoc(
+    "Salón",
+    [ "sala", "estancia" ],
+    "<p class='firstP'>Al cruzar esta última puerta, sientes que el suelo \
+     se desvanece, se abre bajo tus pies...<br/>\
+     Comienzas a caer, a caer, y notas una sensación de vértigo insoportable \
+     en el estómago...<br/>\
+     No puedes evitar gritar, gritar cada vez más fuerte, desesperado...<br/>\
+     Y entonces abres los ojos. La neblina se desvanece al fin, y tu vista \
+     se aclara y se define completamente.<br/> \
+     Delante de tí, por fín enfocas la vista y ves... una mesa. \
+     -<i>¿Una mesa?</i>-<br/><br/>\
+     Te despiertas tirado en el sofá, en el salón de tu casa. \
+     No puedes creer lo que ha pasado. <i>¿Todo ha sido un sueño?</i><br/>\
+     <i>Tiene que haberlo sido</i>-piensas-.<br/>\
+     Ahí están las tres películas que habías alquilado: \
+     \"La máquina del tiempo\", \"Indiana Jones y la última cruzada\" y \
+     el \"Niño de Oro\". El televisor crepita silenciosamente...<br/><br/>\
+     Te arde la barriga. Ahí está, el maldito bote de Mantequilla de \
+     Cacahuete, encima de la mesa; la causa de tus males de estómago.<br/>\
+     Deberías dejar de tomarla para cenar. No te va bien.<br/>\
+     Esto lo explica todo. ${Ahora está claro, norte}.</p>"  );
+locLiving.pic = "res/sofa.jpg";
+locLiving.setExitBi( "sur", locFountain );
+
+locLiving.postExamine = function() {
+    window.scrollTo( 0 );
+}
+
+locLiving.preGo = function() {
+    ctrl.endGame(
+        "<p class='firstP'>\
+        -<i>Todo ha sido un sueño.</i>-Piensas- \
+        mientras te sacudes arena (?) de los pies.</p>\
+        <p align='right'>\
+        <a href='#' onClick='javascript: location.reload()'>Recomienza</a>\
+        la historia.</p><p align='right'>\
+        <a href='#' onClick='javascript: document.getElementById(\"amenities\")\
+        .style.display=\"block\"'>Ver las curiosidades</a>.</p>\
+        <p id='amenities' align='right' style='display: none'>\
+        Los ingredientes de la mantequilla de cacahuete son:<br/>\
+            Cacahuetes<br/>\
+            Aceite<br/>\
+            Sal<br/>\
+            </p>",
+        "res/sofa.jpg" );
+}
+
 // *** PNJs --
 var pnjPan = ctrl.personas.creaPersona( "Pan",
-                    [ "pan" ],
-                    "No eres capaz de mirarte. Por mucho que intentas hacerlo, \
-                    no consigues enfocar la vista hacia tu propio cuerpo, tan \
-                    solo hacia adelante...<br>De repente, te comienza \
-                    a pesar la neblina que parece rodearlo todo...<br>\
-                    Y finalmente, todo vuelve a la normalidad... normalidad...",
-                    locCube
+    [ "pan" ],
+    "No eres capaz de mirarte. Por mucho que intentas hacerlo, \
+    no consigues enfocar la vista hacia tu propio cuerpo, tan \
+    solo hacia adelante...<br>De repente, te comienza \
+    a pesar la neblina que parece rodearlo todo...<br>\
+    Y finalmente, todo vuelve a la normalidad... normalidad...",
+    locCube
 );
 
 // Arranque ------------------------------------------------------------
