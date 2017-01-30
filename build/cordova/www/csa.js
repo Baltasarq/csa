@@ -437,10 +437,7 @@ locLiving.preGo = function() {
         outerHTML=\"\"'>Ver las curiosidades</a>.</p>\
         <p id='amenities' align='right' style='display: none'>\
         Los ingredientes de la mantequilla de cacahuete son:<br/>\
-            Cacahuetes<br/>\
-            Aceite<br/>\
-            Sal<br/>\
-            </p>",
+            Cacahuetes, sal y aceite.</p>",
         "res/sofa.jpg" );
 }
 
@@ -472,4 +469,4 @@ pnjPan.postAction = function() {
 
 // Arranque ------------------------------------------------------------
 ctrl.personas.changePlayer( pnjPan );
-ctrl.lugares.setStart( locFountain/*locCube*/ );
+ctrl.lugares.setStart( locCube );

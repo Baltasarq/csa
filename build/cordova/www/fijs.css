@@ -6,7 +6,9 @@ body {
 	font-size: 16pt;
     margin: 5%;
     text-shadow: 1px 1px white;
-    text-indent: 5mm
+    text-indent: 5mm;
+    text-align: justify;
+    text-justify: inter-word
 }
 
 .firstP {
