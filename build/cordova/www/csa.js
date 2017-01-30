@@ -34,6 +34,11 @@ var locCube = ctrl.places.creaLoc(
      y la sensación de fría, y tensa espera abrumadora, como la extraña \
      ${niebla, ex niebla} que te rodea.</p>" );
 locCube.pic = "res/cube.jpg";
+
+locCube.postExamine = function() {
+    window.scrollTo( 0, 0 );
+}
+
 locCube.time = 0;
 locCube.advanceTime = function() {
     ctrl.clearAnswers();
@@ -189,6 +194,10 @@ var locCliff = ctrl.places.creaLoc(
 	aparece cargando toda la estancia, a base de espesos jirones...</p>" );
 locCliff.pic = "res/cliff.jpg";
 
+locCliff.postExamine = function() {
+    window.scrollTo( 0, 0 );
+}
+
 var objBridge = ctrl.creaObj(
     "puente",
     [ "pasarela" ],
@@ -306,6 +315,10 @@ var locFountain = ctrl.places.creaLoc(
 locFountain.pic = "res/fountain.jpg";
 locFountain.setExitBi( "sur", locCliff );
 
+locFountain.postExamine = function() {
+    window.scrollTo( 0, 0 );
+}
+
 locFountain.preGo = function() {
     var toret = "";
 
@@ -419,7 +432,7 @@ locLiving.pic = "res/sofa.jpg";
 locLiving.setExitBi( "sur", locFountain );
 
 locLiving.postExamine = function() {
-    window.scrollTo( 0 );
+    window.scrollTo( 0, 0 );
 }
 
 locLiving.preGo = function() {

@@ -7,4 +7,5 @@
 *.ulx
 *.gblorb
 build/cordova/platforms
+build/cordova/node_modules
 cpp/bin
