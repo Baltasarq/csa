@@ -172,7 +172,6 @@ objClock.prePush = function() {
             todo pareció ennublecerse, desvanecerse en finas hebras \
             de humo. Y lo que comprobaste al recobrar el sentido fue \
             que era mejor no moverse...";
-    objNiebla.moveTo( locCliff );
     ctrl.goto( locCliff );
     return toret;
 }
@@ -300,7 +299,8 @@ var locFountain = ctrl.places.creaLoc(
         paredes, ni marcas que delimiten el recinto, pero sientes que \
         conoces perfectamente donde están los límites. Hay algunas \
         columnas distribuidas por la estancia, rodeadas idílicamente por \
-        ${enredaderas, ex enredaderas}. Al fondo de la estancia, puedes \
+        ${enredaderas, ex enredaderas}, por supuesto, entre una suerte de \
+        ${neblina, ex niebla}. Al fondo de la estancia, puedes \
         ver una ${puerta, ex puerta}. Y en el medio, \
         una ${fuente, ex fuente}.</p>" );
 locFountain.pic = "res/fountain.jpg";
@@ -429,9 +429,12 @@ locLiving.preGo = function() {
         mientras te sacudes arena (?) de los pies.</p>\
         <p align='right'>\
         <a href='#' onClick='javascript: location.reload()'>Recomienza</a>\
-        la historia.</p><p align='right'>\
-        <a href='#' onClick='javascript: document.getElementById(\"amenities\")\
-        .style.display=\"block\"'>Ver las curiosidades</a>.</p>\
+        la historia.</p>\
+        <p id='lnkAmenities' align='right'>\
+        <a href='#'\
+        onClick='javascript: document.getElementById(\"amenities\")\
+        .style.display=\"block\";document.getElementById(\"lnkAmenities\").\
+        outerHTML=\"\"'>Ver las curiosidades</a>.</p>\
         <p id='amenities' align='right' style='display: none'>\
         Los ingredientes de la mantequilla de cacahuete son:<br/>\
             Cacahuetes<br/>\
@@ -440,6 +443,10 @@ locLiving.preGo = function() {
             </p>",
         "res/sofa.jpg" );
 }
+
+// Fog all around
+locCliff.objs.push( objNiebla );
+locFountain.objs.push( objNiebla );
 
 // *** PNJs --
 var pnjPan = ctrl.personas.creaPersona( "Pan",
@@ -451,7 +458,18 @@ var pnjPan = ctrl.personas.creaPersona( "Pan",
     Y finalmente, todo vuelve a la normalidad... normalidad...",
     locCube
 );
+pnjPan.postAction = function() {
+    if ( ( this.turns % 7 ) == 0
+      && this.turns > 0 ) 
+    {
+        ctrl.print( "La neblina parece hacerse más y más pesada, \
+                     te embota los sentidos, te sientes mal... \
+                     Notas una sensación pesada en el estómago, por un \
+                     momento piensas que vas a vomitar, y entonces \
+                     todo parece enfocarse de nuevo." );
+    }
+}
 
 // Arranque ------------------------------------------------------------
 ctrl.personas.changePlayer( pnjPan );
-ctrl.lugares.setStart( locCube );
+ctrl.lugares.setStart( locFountain/*locCube*/ );
