@@ -36,7 +36,9 @@ var locCube = ctrl.places.creaLoc(
 locCube.pic = "res/cube.jpg";
 
 locCube.postExamine = function() {
-    window.scrollTo( 0, 0 );
+    if ( this.visits == 1 ) {
+        window.scrollTo( 0, 0 );
+    }
 }
 
 locCube.time = 0;
@@ -195,7 +197,9 @@ var locCliff = ctrl.places.creaLoc(
 locCliff.pic = "res/cliff.jpg";
 
 locCliff.postExamine = function() {
-    window.scrollTo( 0, 0 );
+    if ( this.visits == 1 ) {
+        window.scrollTo( 0, 0 );
+    }
 }
 
 var objBridge = ctrl.creaObj(
@@ -316,7 +320,9 @@ locFountain.pic = "res/fountain.jpg";
 locFountain.setExitBi( "sur", locCliff );
 
 locFountain.postExamine = function() {
-    window.scrollTo( 0, 0 );
+    if ( this.visits == 1 ) {
+        window.scrollTo( 0, 0 );
+    }
 }
 
 locFountain.preGo = function() {
@@ -432,7 +438,9 @@ locLiving.pic = "res/sofa.jpg";
 locLiving.setExitBi( "sur", locFountain );
 
 locLiving.postExamine = function() {
-    window.scrollTo( 0, 0 );
+    if ( this.visits == 1 ) {
+        window.scrollTo( 0, 0 );
+    }
 }
 
 locLiving.preGo = function() {

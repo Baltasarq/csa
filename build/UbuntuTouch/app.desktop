@@ -1,10 +1,13 @@
 [Desktop Entry]
-Name=Visitantes
+Categories=Game;AdventureGame
 Comment=Ficción interactiva onírica
-Exec=webapp-container --app-is="csa.baltasarq" $@ www/index.html
+Exec=webapp-container --app-id="csa.baltasarq" $@ www/index.html
+GenericName=Ficción interactiva onírica
+Icon=./icon.png
+Name=Cacahuetes, sal y aceite
+StartupNotify=true
 Terminal=false
 Type=Application
-Categories=Game;AdventureGame
-X-Ubuntu-Touch=true
-Icon=./icon.png
+X-KDE-SubstituteUID=false
 X-Ubuntu-Splash-Color=#ffffff
+X-Ubuntu-Touch=true
