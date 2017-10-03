@@ -10,7 +10,7 @@
  *      Fue creado inicialmente para una *NanoComp* en 2000.
  *      El soporte era un parser propio, que posteriormente cambié por
  *      InformATE!, pero en realidad se trataba más de un relato interactivo
- *      que de una verdadera aventura conversacional (objetos, puzzles, etc.)
+ *      que de una verdadera aventura conversacional ( objetos, puzzles, etc. )
  *      Así que en 2017 me lié la manta a la cabeza y la porté a mi propio
  *      sistema HTML5: **fi.js**. El resultado es así más versátil.
  */
@@ -20,41 +20,32 @@ ctrl.ponIntro( "Despiertas atontado... \
                 en un cubo de acero totalmente regular." );
 ctrl.ponImg( "res/cube.jpg" );
 ctrl.ponAutor( "Baltasarq" );
-ctrl.ponVersion( "4 20170106" );
+ctrl.ponVersion( "4 20170922" );
 
 // *** Locs --
 // ---------------------------------------------------------------------- Celda
 var locCube = ctrl.places.creaLoc(
-    "Celda",
-    [ "camarote", "sala", "prision", "cubo", "celda" ],
-    "<p class='firstP'>Las ${paredes, ex paredes} de acero de esta \
+    "Celda", ["camarote", "sala", "prision", "cubo", "celda"],
+    "Las ${paredes, ex paredes} de acero de esta \
      habitación perfectamente regular parecen \
      estar hechas de una sola pieza, pulidas hasta el punto de brillar con \
      una luz que... no sabes de donde viene. El silencio es sobrecogedor, \
      y la sensación de fría, y tensa espera abrumadora, como la extraña \
-     ${niebla, ex niebla} que te rodea.</p>" );
+     ${niebla, ex niebla} que te rodea." );
 locCube.pic = "res/cube.jpg";
-
-locCube.postExamine = function() {
-    if ( this.visits == 1 ) {
-        window.scrollTo( 0, 0 );
-    }
-}
 
 locCube.time = 0;
 locCube.advanceTime = function() {
     ctrl.clearAnswers();
 
     this.time++;
-    if ( this.time >= 3
-      && this.time < 4)
-    {
+    if ( this.time >= 3 &&
+        this.time < 4 ) {
         ctrl.print( "Te sientes realmente mal. Tus manos tiemblan y... \
                      multitud de arrugas las surcan. Te sientes mareado, \
                      cansado... casi no puedes sostenerte..." );
-    }
-    else
-    if ( this.time >= 4) {
+    } else
+    if ( this.time >= 4 ) {
         this.time = 0;
         ctrl.print( "No puedes creerlo. Como en una pesadilla de Poe, tu \
             cuerpo se descompone ante tus propios ojos... \
@@ -72,11 +63,10 @@ locCube.advanceTime = function() {
                      Notas un cierto temblor, y curiosamente, te \
                      sientes como más viejo..." );
     }
-}
+};
 
 var objNiebla = ctrl.creaObj(
-    "niebla",
-    [ "niebla", "bruma", "neblina" ],
+    "niebla", ["niebla", "bruma", "neblina"],
     "Esta neblina lo envuelve todo... es agobiante, abrumadora...",
     locCube,
     Ent.Scenery
@@ -84,8 +74,7 @@ var objNiebla = ctrl.creaObj(
 objNiebla.setReachable( false );
 
 var objWindow = ctrl.creaObj(
-    "ventana",
-    [ "ventana", "vista", "enrejado", "ventanuco", "cristal" ],
+    "ventana", ["ventana", "vista", "enrejado", "ventanuco", "cristal"],
     "Un pequeño ventanuco, cortado sin remaches ni marcas \
     en la misma pared. Al otro lado, tan solo oscuridad. \
     Su cristal enrejado de 1cm. de espesor te separa de... lo que sea \
@@ -100,15 +89,14 @@ var objWindow = ctrl.creaObj(
 objWindow.preAttack = function() {
     return "Lo intentas con todas tus fuerzas... pero es \
             imposible... estás atrapado...";
-}
+};
 
 objWindow.preOpen = function() {
     return "¿Pero, cómo? No hay pestillos, ni cerrojos...";
-}
+};
 
 var objWalls = ctrl.creaObj(
-    "paredes",
-    [ "pared", "acero", "muro", "muros" ],
+    "paredes", ["pared", "acero", "muro", "muros"],
     "Las paredes son de acero pulido, sin remaches, \
      ni molduras o marcas de ningún tipo.",
     locCube,
@@ -118,7 +106,7 @@ var objWalls = ctrl.creaObj(
 objWalls.preExamine = function() {
     var toret = objWalls.desc;
 
-    if ( this.examinations == 0 ) {
+    if ( this.timesExamined == 1 ) {
         locCube.desc += "<p>Precisamente debido a su uniformidad, \
                         varios elementos llaman tu atención \
                         en las ${paredes, ex paredes}. En la pared sur \
@@ -131,16 +119,16 @@ objWalls.preExamine = function() {
     }
 
     return toret;
-}
+};
 
 objWalls.preAttack = function() {
     return "Golpeas con todas tus fuerzas, y... ¡te haces mucho \
             daño! ...es inútil.";
-}
+};
 
-var objInscripcion = ctrl.creaObj(
+ctrl.creaObj(
     "inscripcion",
-    [ "aviso", "escritura" ],
+    ["aviso", "escritura"],
     "Reza: 'Piensa en cuatro dimensiones. Aún tienes tiempo...'",
     locCube,
     Ent.Scenery
@@ -148,7 +136,7 @@ var objInscripcion = ctrl.creaObj(
 
 var objClock = ctrl.creaObj(
     "reloj",
-    [ "manecillas", "agujas" ],
+    ["manecillas", "agujas"],
     "Es un extraño reloj, pues sus agujas no se mueven por si solas. \
      No crees que tenga mecanismo. Te preguntas por el sentido que pueda \
      tener un reloj como de juguete ahí puesto.",
@@ -158,7 +146,7 @@ var objClock = ctrl.creaObj(
 objClock.preExamine = function() {
     var toret = this.desc;
 
-    if ( this.examinations == 0 ) {
+    if ( this.timesExamined == 1 ) {
         locCube.desc += "<p>Las manecillas del reloj \
                          pueden ser manipuladas libremente. Podrías \
                          ${girarlas en el sentido horario, tira de reloj}, \
@@ -168,11 +156,11 @@ objClock.preExamine = function() {
     }
 
     return toret;
-}
+};
 
 objClock.prePull = function() {
     locCube.advanceTime();
-}
+};
 
 objClock.prePush = function() {
     var toret = "Tras girar las agujas a la inversa, \
@@ -181,30 +169,22 @@ objClock.prePush = function() {
             que era mejor no moverse...";
     ctrl.goto( locCliff );
     return toret;
-}
+};
 
 // --------------------------------------------------------------------- Abismo
 var locCliff = ctrl.places.creaLoc(
-    "Abismo",
-    [ "caida", "sima", "agujero" ],
+    "Abismo", ["caida", "sima", "agujero"],
     "<p class='firstP'>A tus pies, se abre el ${abismo, ex pozo} insondable. \
     Un ${saliente de roca, ex saliente} evita que caigas. Te mantienes en \
     tensión, de espaldas a la pared sur \
-	del mismo. Al otro lado, el lado norte, un saliente de roca \
-	gemelo al que pisas ahora, da paso a la caverna que se abre \
-	al exterior. En medio de los salientes, la nada. La ${niebla, ex niebla} \
-	aparece cargando toda la estancia, a base de espesos jirones...</p>" );
+    del mismo. Al otro lado, el lado norte, un saliente de roca \
+    gemelo al que pisas ahora, da paso a la caverna que se abre \
+    al exterior. En medio de los salientes, la nada. La ${niebla, ex niebla} \
+    aparece cargando toda la estancia, a base de espesos jirones...</p>" );
 locCliff.pic = "res/cliff.jpg";
 
-locCliff.postExamine = function() {
-    if ( this.visits == 1 ) {
-        window.scrollTo( 0, 0 );
-    }
-}
-
-var objBridge = ctrl.creaObj(
-    "puente",
-    [ "pasarela" ],
+ctrl.creaObj(
+    "puente", ["pasarela"],
     "Un puente que antes no veías por un efecto óptico ${cruza, norte} \
     entre ambos salientes.",
     locCliff,
@@ -212,15 +192,14 @@ var objBridge = ctrl.creaObj(
 );
 
 var objRock = ctrl.creaObj(
-    "saliente",
-    [ "roca" ],
+    "saliente", ["roca"],
     "Casi no te atreves a mover los pies, en la superficie resbaladiza por \
      la arena.",
     locCliff,
     Ent.Scenery
 );
 objRock.preExamine = function() {
-    if ( objRock.examinations == 0 ) {
+    if ( objRock.timesExamined == 1 ) {
         objSand.moveTo( locCliff );
         locCliff.desc += "<p>El suelo del saliente está lleno \
                         de montoncitos de ${arena, ex arena}. \
@@ -230,19 +209,17 @@ objRock.preExamine = function() {
     }
 
     return objRock.desc;
-}
+};
 
-var objWell = ctrl.creaObj(
-    "sima",
-    [ "pozo" ],
+ctrl.creaObj(
+    "sima", ["pozo"],
     "El abismo es negro e insondable. Muy profundo. Da miedo.",
     locCliff,
     Ent.Scenery
 );
 
 var objSign = ctrl.creaObj(
-    "cartel",
-    [ "aviso" ],
+    "cartel", ["aviso"],
     "Medio podrido por la humedad, indica: 'Ten Fe: pero que no sea ciega.'",
     locCliff,
     Ent.Scenery
@@ -250,7 +227,7 @@ var objSign = ctrl.creaObj(
 
 var objSand = ctrl.creaObj(
     "arena",
-    [ "montoncitos", "montoncito", "monton", "montones", "grano", "granos" ],
+    ["montoncitos", "montoncito", "monton", "montones", "grano", "granos"],
     "Montoncitos de arena gorda",
     ctrl.places.limbo,
     Ent.Scenery
@@ -268,7 +245,7 @@ objSand.prePush = function() {
     actions.execute( "look" );
 
     return toret;
-}
+};
 
 objSand.preExamine = function() {
     var toret = objSand.desc;
@@ -283,21 +260,20 @@ objSand.preExamine = function() {
                   efecto te invita a ${tirar arena, empuja arena} hacia \
                   adelante.";
     } else {
-        toret += ", que podrías ${coger, coge arena} con tus manos."
+        toret += ", que podrías ${coger, coge arena} con tus manos.";
     }
 
     return toret;
-}
+};
 
 objSand.preTake = function() {
     this.moveTo( ctrl.personas.getPlayer() );
     return "Tomas un montoncito de arena en tus manos, mientras los \
             granos se escurren por entre tus dedos.";
-}
+};
 
-var objBridge = ctrl.creaObj(
-    "puente",
-    [ "pasarela" ],
+ctrl.creaObj(
+    "puente", ["pasarela"],
     "Un puente que antes no veías por un efecto óptico ${cruza, norte} \
     entre ambos salientes.",
     locCliff,
@@ -306,8 +282,7 @@ var objBridge = ctrl.creaObj(
 
 // --------------------------------------------------------------------- Salida
 var locFountain = ctrl.places.creaLoc(
-    "Salida",
-    [ "sala", "estancia" ],
+    "Salida", ["sala", "estancia"],
     "<p class='firstP'>Extraño lugar... No hay \
         paredes, ni marcas que delimiten el recinto, pero sientes que \
         conoces perfectamente donde están los límites. Hay algunas \
@@ -318,12 +293,6 @@ var locFountain = ctrl.places.creaLoc(
         una ${fuente, ex fuente}.</p>" );
 locFountain.pic = "res/fountain.jpg";
 locFountain.setExitBi( "sur", locCliff );
-
-locFountain.postExamine = function() {
-    if ( this.visits == 1 ) {
-        window.scrollTo( 0, 0 );
-    }
-}
 
 locFountain.preGo = function() {
     var toret = "";
@@ -339,11 +308,10 @@ locFountain.preGo = function() {
     }
 
     return toret;
-}
+};
 
-var objVine = ctrl.creaObj(
-    "enredadera",
-    [ "enredaderas", "hiedra", "hiedras", "columnas", "columna" ],
+ctrl.creaObj(
+    "enredadera", ["enredaderas", "hiedra", "hiedras", "columnas", "columna"],
     "Las enredaderas trepan por entre las columnas, \
     formando un tupido entramado.",
     locFountain,
@@ -351,8 +319,7 @@ var objVine = ctrl.creaObj(
 );
 
 var objDoor = ctrl.creaObj(
-    "puerta",
-    [ "marco" ],
+    "puerta", ["marco"],
     "Es una rara puerta. En realidad, sólo es un marco, con extrañas \
     inscripciones en forma de figuras geométricas. A través del marco \
     parece poder verse una ${extraña imagen, ex imagen}, que ondula... \
@@ -362,9 +329,8 @@ var objDoor = ctrl.creaObj(
 );
 objDoor.triedToCross = false;
 
-var objImage = ctrl.creaObj(
-    "imagen",
-    [ "ondulacion" ],
+ctrl.creaObj(
+    "imagen", ["ondulacion"],
     "A través de la puerta, ves... ves... ¡Eres tú! \
     Te ves en posición horizontal, en una extraña estancia \
     llena de elementos irreconocibles. Al fondo parece haber \
@@ -376,8 +342,7 @@ var objImage = ctrl.creaObj(
 );
 
 var objFountain = ctrl.creaObj(
-    "fuente",
-    [ "barroco", "barroca", "concha" ],
+    "fuente", ["barroco", "barroca", "concha"],
     "Hay una pequeña fuente en el centro exacto de la sala. \
      Un chorro brillante y sugerente de agua cristalina brota de ella. \
      Sientes el extraño impulso de ${cogerla, ex agua} en tu mano...",
@@ -389,7 +354,7 @@ objFountain.drunk = false;
 objFountain.preHave = function() {
     this.drunk = true;
     return "El agua no te refresca... pero te sientes como más puro.";
-}
+};
 
 objFountain.preExamine = function() {
     var toret = objFountain.desc;
@@ -400,11 +365,10 @@ objFountain.preExamine = function() {
     }
 
     return toret;
-}
+};
 
-var objWater = ctrl.creaObj(
-    "agua",
-    [ "chorro" ],
+ctrl.creaObj(
+    "agua", ["chorro"],
     "Intentas coger el chorro de agua... el agua se escurre por \
      entre tus dedos... pero... que extraño... no moja...",
     locFountain,
@@ -413,8 +377,7 @@ var objWater = ctrl.creaObj(
 
 // --------------------------------------------------------------------- Final
 var locLiving = ctrl.places.creaLoc(
-    "Salón",
-    [ "sala", "estancia" ],
+    "Salón", ["sala", "estancia"],
     "<p class='firstP'>Al cruzar esta última puerta, sientes que el suelo \
      se desvanece, se abre bajo tus pies...<br/>\
      Comienzas a caer, a caer, y notas una sensación de vértigo insoportable \
@@ -433,15 +396,9 @@ var locLiving = ctrl.places.creaLoc(
      Te arde la barriga. Ahí está, el maldito bote de Mantequilla de \
      Cacahuete, encima de la mesa; la causa de tus males de estómago.<br/>\
      Deberías dejar de tomarla para cenar. No te va bien.<br/>\
-     Esto lo explica todo. ${Ahora está claro, norte}.</p>"  );
+     Esto lo explica todo. ${Ahora está claro, norte}.</p>" );
 locLiving.pic = "res/sofa.jpg";
 locLiving.setExitBi( "sur", locFountain );
-
-locLiving.postExamine = function() {
-    if ( this.visits == 1 ) {
-        window.scrollTo( 0, 0 );
-    }
-}
 
 locLiving.preGo = function() {
     ctrl.endGame(
@@ -453,22 +410,21 @@ locLiving.preGo = function() {
         la historia.</p>\
         <p id='lnkAmenities' align='right'>\
         <a href='#'\
-        onClick='javascript: document.getElementById(\"amenities\")\
-        .style.display=\"block\";document.getElementById(\"lnkAmenities\").\
+        onClick='javascript: document.getElementById( \"amenities\" )\
+        .style.display=\"block\";document.getElementById( \"lnkAmenities\" ).\
         outerHTML=\"\"'>Ver las curiosidades</a>.</p>\
         <p id='amenities' align='right' style='display: none'>\
         Los ingredientes de la mantequilla de cacahuete son:<br/>\
             Cacahuetes, sal y aceite.</p>",
         "res/sofa.jpg" );
-}
+};
 
 // Fog all around
 locCliff.objs.push( objNiebla );
 locFountain.objs.push( objNiebla );
 
 // *** PNJs --
-var pnjPan = ctrl.personas.creaPersona( "Pan",
-    [ "pan" ],
+var pnjPan = ctrl.personas.creaPersona( "Pan", ["pan"],
     "No eres capaz de mirarte. Por mucho que intentas hacerlo, \
     no consigues enfocar la vista hacia tu propio cuerpo, tan \
     solo hacia adelante...<br>De repente, te comienza \
@@ -478,7 +434,7 @@ var pnjPan = ctrl.personas.creaPersona( "Pan",
 );
 pnjPan.postAction = function() {
     if ( ( this.turns % 7 ) == 0
-      && this.turns > 0 ) 
+      && this.turns > 0 )
     {
         ctrl.print( "La neblina parece hacerse más y más pesada, \
                      te embota los sentidos, te sientes mal... \
@@ -486,7 +442,7 @@ pnjPan.postAction = function() {
                      momento piensas que vas a vomitar, y entonces \
                      todo parece enfocarse de nuevo." );
     }
-}
+};
 
 // Arranque ------------------------------------------------------------
 ctrl.personas.changePlayer( pnjPan );
