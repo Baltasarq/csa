@@ -174,13 +174,13 @@ objClock.prePush = function() {
 // --------------------------------------------------------------------- Abismo
 var locCliff = ctrl.places.creaLoc(
     "Abismo", ["caida", "sima", "agujero"],
-    "<p class='firstP'>A tus pies, se abre el ${abismo, ex pozo} insondable. \
+    "A tus pies, se abre el ${abismo, ex pozo} insondable. \
     Un ${saliente de roca, ex saliente} evita que caigas. Te mantienes en \
     tensión, de espaldas a la pared sur \
     del mismo. Al otro lado, el lado norte, un saliente de roca \
     gemelo al que pisas ahora, da paso a la caverna que se abre \
     al exterior. En medio de los salientes, la nada. La ${niebla, ex niebla} \
-    aparece cargando toda la estancia, a base de espesos jirones...</p>" );
+    aparece cargando toda la estancia, a base de espesos jirones..." );
 locCliff.pic = "res/cliff.jpg";
 
 ctrl.creaObj(
@@ -283,14 +283,14 @@ ctrl.creaObj(
 // --------------------------------------------------------------------- Salida
 var locFountain = ctrl.places.creaLoc(
     "Salida", ["sala", "estancia"],
-    "<p class='firstP'>Extraño lugar... No hay \
+    "Extraño lugar... No hay \
         paredes, ni marcas que delimiten el recinto, pero sientes que \
         conoces perfectamente donde están los límites. Hay algunas \
         columnas distribuidas por la estancia, rodeadas idílicamente por \
         ${enredaderas, ex enredaderas}, por supuesto, entre una suerte de \
         ${neblina, ex niebla}. Al fondo de la estancia, puedes \
         ver una ${puerta, ex puerta}. Y en el medio, \
-        una ${fuente, ex fuente}.</p>" );
+        una ${fuente, ex fuente}." );
 locFountain.pic = "res/fountain.jpg";
 locFountain.setExitBi( "sur", locCliff );
 
@@ -378,7 +378,7 @@ ctrl.creaObj(
 // --------------------------------------------------------------------- Final
 var locLiving = ctrl.places.creaLoc(
     "Salón", ["sala", "estancia"],
-    "<p class='firstP'>Al cruzar esta última puerta, sientes que el suelo \
+    "Al cruzar esta última puerta, sientes que el suelo \
      se desvanece, se abre bajo tus pies...<br/>\
      Comienzas a caer, a caer, y notas una sensación de vértigo insoportable \
      en el estómago...<br/>\
@@ -396,14 +396,13 @@ var locLiving = ctrl.places.creaLoc(
      Te arde la barriga. Ahí está, el maldito bote de Mantequilla de \
      Cacahuete, encima de la mesa; la causa de tus males de estómago.<br/>\
      Deberías dejar de tomarla para cenar. No te va bien.<br/>\
-     Esto lo explica todo. ${Ahora está claro, norte}.</p>" );
+     Esto lo explica todo. ${Ahora está claro, norte}." );
 locLiving.pic = "res/sofa.jpg";
 locLiving.setExitBi( "sur", locFountain );
 
 locLiving.preGo = function() {
     ctrl.endGame(
-        "<p class='firstP'>\
-        -<i>Todo ha sido un sueño.</i>-Piensas- \
+        "-<i>Todo ha sido un sueño.</i>-Piensas- \
         mientras te sacudes arena (?) de los pies.</p>\
         <p align='right'>\
         <a href='#' onClick='javascript: location.reload()'>Recomienza</a>\
@@ -415,7 +414,7 @@ locLiving.preGo = function() {
         outerHTML=\"\"'>Ver las curiosidades</a>.</p>\
         <p id='amenities' align='right' style='display: none'>\
         Los ingredientes de la mantequilla de cacahuete son:<br/>\
-            Cacahuetes, sal y aceite.</p>",
+            Cacahuetes, sal y aceite.",
         "res/sofa.jpg" );
 };
 
