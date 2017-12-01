@@ -9,3 +9,5 @@
 build/cordova/platforms
 build/cordova/node_modules
 cpp/bin
+build.sh
+
