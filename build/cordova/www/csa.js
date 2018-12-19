@@ -1,4 +1,4 @@
-// csa.js
+// csa (c) Baltasar 2017/18 MIT License <baltasarq@gmail.com>
 /*
  *      Cacahuetes, sal y aceite (v4)
  *          1998, 1999, 2000, 2012: Csa: Parser KAC/C++
@@ -10,7 +10,7 @@
  *      Fue creado inicialmente para una *NanoComp* en 2000.
  *      El soporte era un parser propio, que posteriormente cambié por
  *      InformATE!, pero en realidad se trataba más de un relato interactivo
- *      que de una verdadera aventura conversacional ( objetos, puzzles, etc. )
+ *      que de una verdadera aventura conversacional (objetos, puzzles, etc.)
  *      Así que en 2017 me lié la manta a la cabeza y la porté a mi propio
  *      sistema HTML5: **fi.js**. El resultado es así más versátil.
  */

@@ -10,7 +10,7 @@ Cacahuetes, sal y aceite (v4)
 
  2009, 2010, 2016: Csa v2 a Csa v3: informATE!/Zcode
 
- 2017: Aventura de texto onírica construida con fi.js.
+ 2017, 2018: Aventura de texto onírica construida con fi.js.
 
  (c) 1998-2017 baltasarq@gmail.com MIT License
 
