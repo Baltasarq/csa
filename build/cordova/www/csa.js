@@ -3,7 +3,7 @@
  *      Cacahuetes, sal y aceite (v4)
  *          1998, 1999, 2000, 2012: Csa: Parser KAC/C++
  *          2009, 2010, 2016: Csa v2 a Csa v3: informATE!/Zcode
- *          2017: Aventura de texto onírica construida con fi.js.
+ *          2017, 2018: Aventura de texto onírica construida con fi.js.
  *      (c) 1998-2017 baltasarq@gmail.com MIT License
  *
  *      Este relato tiene una larga historia.
@@ -20,7 +20,7 @@ ctrl.ponIntro( "Despiertas atontado... \
                 en un cubo de acero totalmente regular." );
 ctrl.ponImg( "res/cube.jpg" );
 ctrl.ponAutor( "Baltasarq" );
-ctrl.ponVersion( "4 20170922" );
+ctrl.ponVersion( "4.1 20181219" );
 
 // *** Locs --
 // ---------------------------------------------------------------------- Celda
@@ -106,15 +106,16 @@ var objWalls = ctrl.creaObj(
 objWalls.preExamine = function() {
     var toret = objWalls.desc;
 
-    if ( this.timesExamined == 1 ) {
-        locCube.desc += "<p>Precisamente debido a su uniformidad, \
+    if ( this.timesExamined == 3 ) {
+        locCube.desc += "<p>Se te ocurre que quizás \
+                        puedas ${romper las paredes, golpea paredes}. \
+                        Precisamente debido a su uniformidad, \
                         varios elementos llaman tu atención \
-                        en las ${paredes, ex paredes}. En la pared sur \
+                        en ${ellas, ex paredes}. En la pared sur \
                         puedes ver una \
                         ${ventana, ex ventana} y un ${reloj, ex reloj} \
                         mientras en la pared oeste hay algún tipo de \
-                        ${inscripción, ex aviso}. Piensas que quizás \
-                        puedas ${romperlas, golpea paredes}.</p>";
+                        ${inscripción, ex aviso}.</p>";
         actions.execute( "look" );
     }
 
