@@ -20,7 +20,7 @@ ctrl.ponIntro( "Despiertas atontado... \
                 en un cubo de acero totalmente regular." );
 ctrl.ponImg( "res/cube.jpg" );
 ctrl.ponAutor( "Baltasarq" );
-ctrl.ponVersion( "4.1 20181219" );
+ctrl.ponVersion( "4.1 20181221" );
 
 // *** Locs --
 // ---------------------------------------------------------------------- Celda
