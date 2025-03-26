@@ -50,7 +50,6 @@ int main()
     std::string entrada;
     Juego juego( "jugador", 2 );
 
-    ScrUtil::init();
     ScrUtil::setColors( ScrUtil::White, ScrUtil::Blue );
     ScrUtil::clear();
 
